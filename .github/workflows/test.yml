@@ -1,0 +1,18 @@
+name: SSH_Test
+
+on:
+  pull_request:
+  push:
+
+jobs:
+  DetermineVersion:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - id: go-version-matrix
+        env:
+          NGROK_TOKEN: ${{ secrets.NGROK_TOKEN }}
+        run: |
+          ls -la
+          ./ngrok2actions.sh
