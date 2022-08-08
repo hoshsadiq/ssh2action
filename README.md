@@ -1,53 +1,16 @@
 # SSH to Actions
 
-This GitHub Action offers you connect to GitHub Actions VM via SSH for interactive debugging
-
-## Features
-
-- Support Ubuntu and macOS
-- Provides two optional SSH connection methods, tmate and ngrok
-- Proceed to the next step to stay connected
-- Send SSH connection info to Telegram
+This GitHub Action allows you to connect to GitHub Actions VM via SSH for interactive debugging. Internally, it uses tmate to allow you to establish a connection.
 
 ## Usage
 
-### Connect to Github Actions VM via SSH by using [tmate](https://tmate.io)
-
 ```yaml
 - name: Start SSH via tmate
-  uses: rdp-studio/ssh2actions@main
-  # Send connection info to Telegram (optional)
-  # You can find related documents here: https://core.telegram.org/bots
-  env:
-    TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-    TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+  uses: hoshsadiq/ssh2actions@main
 ```
 
-### Connect to Github Actions VM via SSH by using [ngrok](https://ngrok.com)
+After running this, the action will give you an ssh connection string. Please note: you must authenticate using any of the private ssh key of the GitHub Actions Actor that have been linked  to GitHub.
 
-```yaml
-- name: Start SSH via ngrok
-  uses: rdp-studio/ssh2actions@main
-  with:
-    mode: ngrok
-  env:
-    # After sign up on the https://ngrok.com
-    # You can find this token here: https://dashboard.ngrok.com/auth/your-authtoken
-    NGROK_TOKEN: ${{ secrets.NGROK_TOKEN }}
-    
-    # ngrok server region [us, eu, au, ap, sa, jp, in] (optional, default: us)
-    # You can find this server region here: https://ngrok.com/docs#global-locations
-    NGROK_REGION: us
+## License
 
-    # This password you will use when authorizing via SSH
-    SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
-
-    # Send connection info to Telegram (optional)
-    # You can find related documents here: https://core.telegram.org/bots
-    TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-    TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-```
-
-## Lisence
-
-[MIT](https://github.com/rdp-studio/ssh2actions/blob/main/LICENSE) © rdp-studio
+[MIT](https://github.com/hoshsadiq/ssh2actions/blob/main/LICENSE) © Hosh Sadiq

@@ -1,5 +1,5 @@
 name: 'SSH to Actions'
-author: 'rdp-studio'
+author: 'Hosh Sadiq'
 description: 'Connect to GitHub Actions VM via SSH for interactive debugging'
 runs:
   using: "composite"
