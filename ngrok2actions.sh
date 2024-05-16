@@ -15,22 +15,32 @@ CONTINUE_FILE="/tmp/continue"
 SOCKET_FILE="$(mktemp -u -t "tmate-$(id -u).XXXXXXXX")"
 LOG_FILE="$SOCKET_FILE.log"
 
-latest_tmate_version="$(curl --fail --show-error --silent --location "https://api.github.com/repos/tmate-io/tmate/releases/latest" | jq -r .tag_name)"
-if uname --kernel-name --machine | grep -qFxi "Linux x86_64"; then
-    echo -e "${INFO} Install ngrok ..."
+install_tmate() {
+    latest_tmate_version="$(curl --fail --show-error --silent --location "https://api.github.com/repos/tmate-io/tmate/releases/latest" | jq -r .tag_name)"
+    if uname --kernel-name --machine | grep -qFxi "Linux x86_64"; then
+        echo -e "${INFO} Install tmate ..."
+    
+        curl --fail --show-error --silent --location "https://github.com/tmate-io/tmate/releases/download/${latest_tmate_version}/tmate-${latest_tmate_version}-static-linux-amd64.tar.xz" | \
+          sudo tar --xz -xvf - -C /usr/local/bin --strip-components=1
+    else
+        echo -e "${ERROR} This system is not supported!"
+        exit 1
+    fi
+    tmate -V
+    echo -e "${INFO} tmate installed successfully..."
+}
 
-    curl --fail --show-error --silent --location "https://github.com/tmate-io/tmate/releases/download/${latest_tmate_version}/tmate-${latest_tmate_version}-static-linux-amd64.tar.xz" | \
-      sudo tar --xz -xvf - -C /usr/local/bin --strip-components=1
-else
-    echo -e "${ERROR} This system is not supported!"
-    exit 1
-fi
-tmate -V
-echo -e "${INFO} tmate installed successfully..."
-
-mkdir -p "$HOME/.ssh"
-curl -fsSL "https://github.com/${GITHUB_ACTOR}.keys" > "$HOME/.ssh/authorized_keys"
-chmod -R go-rwx "$HOME/.ssh"
+set_up_authorized_keys() {
+    echo -e "${INFO} Setting up authorized_keys:"
+    mkdir -p "$HOME/.ssh"
+    curl -fsSL "https://github.com/${GITHUB_ACTOR}.keys" > "$HOME/.ssh/authorized_keys"
+    chmod -R go-rwx "$HOME/.ssh"
+    
+    echo -e "${INFO} The following keys will have access:"
+    while read l; do
+      [[ -n $l && ${l###} = $l ]] && ssh-keygen -l -f /dev/stdin <<<$l;
+    done < "$HOME/.ssh/authorized_keys"
+}
 
 echo -e "${INFO} Start tmate..."
 exec tmate -a "$HOME/.ssh/authorized_keys" -S "$SOCKET_FILE" -F >"$LOG_FILE" 2>&1 &
