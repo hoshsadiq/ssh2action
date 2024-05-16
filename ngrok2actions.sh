@@ -31,6 +31,7 @@ install_tmate() {
 }
 
 set_up_authorized_keys() {
+    set -x
     echo -e "${INFO} Setting up authorized_keys:"
     mkdir -p "$HOME/.ssh"
     curl -fsSL "https://github.com/${GITHUB_ACTOR}.keys" > "$HOME/.ssh/authorized_keys"
@@ -38,6 +39,7 @@ set_up_authorized_keys() {
     
     echo -e "${INFO} The following keys will have access:"
     ssh-keygen -l -f /dev/stdin < "$HOME/.ssh/authorized_keys" | sed -e "s/^/${green}    /" -e "s/\$/${reset}/"
+    set +x
 }
 
 install_tmate
