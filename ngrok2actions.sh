@@ -2,10 +2,10 @@
 
 set -euo pipefail
 
-green="\033[32m"
-red="\033[31m"
-yellow="\033[1;33m"
-reset="\033[0m"
+green=$'\033[32m'
+red=$'\033[31m'
+yellow=$'\033[1;33m'
+reset=$'\033[0m'
 
 INFO="[${green}INFO${reset}]"
 WARN="[${yellow}WARN${reset}]"
@@ -37,9 +37,7 @@ set_up_authorized_keys() {
     chmod -R go-rwx "$HOME/.ssh"
     
     echo -e "${INFO} The following keys will have access:"
-    while read l; do
-      [[ -n $l && ${l###} = $l ]] && ssh-keygen -l -f /dev/stdin <<<$l;
-    done < "$HOME/.ssh/authorized_keys"
+    ssh-keygen -l -f /dev/stdin < "$HOME/.ssh/authorized_keys" | sed -e "s/^/${green}    /" -e "s/\$/${reset}/"
 }
 
 echo -e "${INFO} Start tmate..."
