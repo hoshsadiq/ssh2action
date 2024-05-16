@@ -40,6 +40,9 @@ set_up_authorized_keys() {
     ssh-keygen -l -f /dev/stdin < "$HOME/.ssh/authorized_keys" | sed -e "s/^/${green}    /" -e "s/\$/${reset}/"
 }
 
+install_tmate
+set_up_authorized_keys
+
 echo -e "${INFO} Start tmate..."
 exec tmate -a "$HOME/.ssh/authorized_keys" -S "$SOCKET_FILE" -F >"$LOG_FILE" 2>&1 &
 TMATE_PID="$!"
