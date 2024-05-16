@@ -47,7 +47,7 @@ start_tmate() {
 
 print_connection_info() {
   local key_fingerprints
-  key_fingerprints="$(ssh-keygen -l -f /dev/stdin < "$HOME/.ssh/authorized_keys" | sed -e "s/^/${green}    /" -e "s/\$/${reset}/")"
+  key_fingerprints="$(ssh-keygen -l -f /dev/stdin < "$HOME/.ssh/authorized_keys" | sed -e "s/^/    /")"
   echo -e "$(cat <<EOF
 ------------------------------------------------------------------------
 To connect to this session copy and paste the following into a terminal:
@@ -55,9 +55,13 @@ To connect to this session copy and paste the following into a terminal:
     ${green}ssh ${SSH_CMD}${reset}
 
 ${yellow}NOTE:${reset} you must authenticate using the private key of any SSH key set up
-in your GitHub ${GITHUB_ACTOR} account. You can use the ${green}-i /path/to/private-key${reset} with ssh.
+in your GitHub account. You can use the ${green}-i /path/to/private-key${reset} with ssh.
 
+The following keys will have access (user ${green}${GITHUB_ACTOR}${reset}):
+
+${green}
 ${key_fingerprints}
+${reset}
 
 ${yellow}TIP:${reset} Run ${green}touch ${CONTINUE_FILE}${reset} to continue to the next step.
 ------------------------------------------------------------------------
