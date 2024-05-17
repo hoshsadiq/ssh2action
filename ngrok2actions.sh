@@ -46,7 +46,8 @@ start_tmate() {
 }
 
 print_connection_info() {
-  local key_fingerprints
+  local key_fingerprints SSH_CMD
+  SSH_CMD="$(awk '/^ssh session:/{print $4}' "$LOG_FILE")"
   key_fingerprints="$(ssh-keygen -l -f /dev/stdin < "$HOME/.ssh/authorized_keys" | sed -e "s/^/    /")"
   echo -e "$(cat <<EOF
 ------------------------------------------------------------------------
@@ -72,7 +73,6 @@ EOF
 await_continue() {
   ERRORS_LOG=$(grep "command failed" "${LOG_FILE}" || true)
   if [[ -e "${LOG_FILE}" && -z "${ERRORS_LOG}" ]]; then
-    SSH_CMD="$(awk '/^ssh session:/{print $4}' "$LOG_FILE")"
     while pgrep -x tmate >/dev/null && [[ ! -f "$CONTINUE_FILE" ]]; do
       sleep 1
     done
