@@ -15,14 +15,12 @@ CONTINUE_FILE="/tmp/continue"
 SOCKET_FILE="$(mktemp -u -t "tmate-$(id -u).XXXXXXXX")"
 LOG_FILE="$SOCKET_FILE.log"
 
-sudo() {
-  if command -v sudo >/dev/null; then
-    command -v sudo
-    command sudo "$@"
-  else
+if ! hash sudo 2> /dev/null && whoami | grep root; then
+  sudo() {
     "$@"
-  fi
-}
+  }
+fi
+
 
 install_tmate() {
     latest_tmate_version="$(curl --fail --show-error --silent --location "https://api.github.com/repos/tmate-io/tmate/releases/latest" | jq -r .tag_name)"
