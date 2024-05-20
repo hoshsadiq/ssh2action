@@ -17,7 +17,8 @@ LOG_FILE="$SOCKET_FILE.log"
 
 sudo() {
   if command -v sudo >/dev/null; then
-      command sudo "$@"
+    command -v sudo
+    command sudo "$@"
   else
     "$@"
   fi
