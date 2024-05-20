@@ -15,6 +15,14 @@ CONTINUE_FILE="/tmp/continue"
 SOCKET_FILE="$(mktemp -u -t "tmate-$(id -u).XXXXXXXX")"
 LOG_FILE="$SOCKET_FILE.log"
 
+sudo() {
+  if command -v sudo >/dev/null; then
+      command sudo "$@"
+  else
+    "$@"
+  fi
+}
+
 install_tmate() {
     latest_tmate_version="$(curl --fail --show-error --silent --location "https://api.github.com/repos/tmate-io/tmate/releases/latest" | jq -r .tag_name)"
     if uname --kernel-name --machine | grep -qFxi "Linux x86_64"; then
