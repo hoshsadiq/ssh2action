@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -euxo pipefail
+set -euo pipefail
 
 green=$'\033[32m'
 red=$'\033[31m'
@@ -24,7 +24,7 @@ fi
 
 install_tmate() {
     latest_tmate_version="$(curl --fail --show-error --silent --location "https://api.github.com/repos/tmate-io/tmate/releases/latest" | jq -r .tag_name)"
-    if uname --kernel-name --machine | grep -qFxi "Linux x86_64"; then
+    if uname -sm | grep -qFxi "Linux x86_64"; then
         echo -e "${INFO} Install tmate ..."
 
         curl --fail --show-error --silent --location "https://github.com/tmate-io/tmate/releases/download/${latest_tmate_version}/tmate-${latest_tmate_version}-static-linux-amd64.tar.xz" | \
