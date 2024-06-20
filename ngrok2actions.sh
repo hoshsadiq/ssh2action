@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -euo pipefail
+set -euxo pipefail
 
 green=$'\033[32m'
 red=$'\033[31m'
@@ -29,7 +29,7 @@ install_tmate() {
 
         curl --fail --show-error --silent --location "https://github.com/tmate-io/tmate/releases/download/${latest_tmate_version}/tmate-${latest_tmate_version}-static-linux-amd64.tar.xz" | \
           sudo tar --xz -xvf - -C /usr/local/bin --strip-components=1
-    elif uname --kernel-name | grep -qFxi "Darwin"; then
+    elif uname -s | grep -qFxi "Darwin"; then
         brew install tmate
     else
         echo -e "${ERROR} This system is not supported!"
